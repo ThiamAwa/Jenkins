@@ -38,7 +38,7 @@ public class InscriptionController {
         if (bindingResult.hasErrors()) {
             // S'il y a des erreurs, renvoyer sur le formulaire avec les données existantes
             model.addAttribute("listeInscrpt", inscriptionService.findAll());
-            return "insrire";
+            return "inscrire";
         }
         inscriptionService.create(inscrire);
         return "redirect:/inscrire";
