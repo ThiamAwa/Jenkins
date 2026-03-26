@@ -30,7 +30,7 @@ public class InscriptionController {
 
         // Ajouter un objet vide pour le formulaire
         model.addAttribute("inscrire", new Inscrire());
-        return "inscrire"; // nom du template Thymeleaf
+        return "inscrire";
     }
 
     @PostMapping("/save")
@@ -38,7 +38,7 @@ public class InscriptionController {
         if (bindingResult.hasErrors()) {
             // S'il y a des erreurs, renvoyer sur le formulaire avec les données existantes
             model.addAttribute("listeInscrpt", inscriptionService.findAll());
-            return "inscrire";
+            return "insrire";
         }
         inscriptionService.create(inscrire);
         return "redirect:/inscrire";
