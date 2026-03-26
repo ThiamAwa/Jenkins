@@ -7,7 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import sn.dev.gestionetablissement.Service.InscriptionService;
 import sn.dev.gestionetablissement.model.Inscrire;
 
@@ -15,6 +14,7 @@ import java.util.List;
 
 @Controller
 public class InscriptionController {
+
     private final InscriptionService inscriptionService;
 
     @Autowired
@@ -23,27 +23,24 @@ public class InscriptionController {
     }
 
     @GetMapping("/inscrire")
-    public String inscrire(Model model, @RequestParam(name = "query", defaultValue = "", required = false) String query) {
-        List<Inscrire> inscrires;
-        if (query.isEmpty()) {
-            inscrires = inscriptionService.findAll();
-        } else {
-//            inscrires = inscriptionService.findAllByAnnAccContaining(query);
-        }
+    public String inscrire(Model model) {
+        // Récupérer toutes les inscriptions
+        List<Inscrire> inscrires = inscriptionService.findAll();
+        model.addAttribute("listeInscrpt", inscrires);
 
-//        model.addAttribute("listeInscrpt", inscrires);
+        // Ajouter un objet vide pour le formulaire
         model.addAttribute("inscrire", new Inscrire());
-        model.addAttribute("query", query);
-        return "insrire";
+        return "inscrire"; // nom du template Thymeleaf
     }
 
-
     @PostMapping("/save")
-    public String save(@Valid Inscrire inscrire, BindingResult bindingResult) {
+    public String save(@Valid Inscrire inscrire, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "redirect:/insrire";
+            // S'il y a des erreurs, renvoyer sur le formulaire avec les données existantes
+            model.addAttribute("listeInscrpt", inscriptionService.findAll());
+            return "inscrire";
         }
         inscriptionService.create(inscrire);
-        return "redirect:/insrire";
+        return "redirect:/inscrire";
     }
 }
