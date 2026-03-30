@@ -86,10 +86,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ Pipeline exécuté avec succès'
+            echo 'Pipeline exécuté avec succès'
         }
         failure {
-            echo '❌ Pipeline échoué'
+            echo ' Pipeline échoué'
         }
     }
 }

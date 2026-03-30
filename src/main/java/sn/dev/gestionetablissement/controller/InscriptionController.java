@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import sn.dev.gestionetablissement.Service.InscriptionService;
 import sn.dev.gestionetablissement.model.Inscrire;
+import sn.dev.gestionetablissement.model.Etudiant; // Import ajouté
 
 import java.util.List;
 
@@ -28,8 +29,11 @@ public class InscriptionController {
         List<Inscrire> inscrires = inscriptionService.findAll();
         model.addAttribute("listeInscrpt", inscrires);
 
-        // Ajouter un objet vide pour le formulaire
-        model.addAttribute("inscrire", new Inscrire());
+        // Ajouter un objet Inscrire avec un Etudiant initialisé
+        Inscrire inscrire = new Inscrire();
+        inscrire.setEtudiant(new Etudiant()); // ← important !
+        model.addAttribute("inscrire", inscrire);
+
         return "inscrire";
     }
 
