@@ -6,7 +6,7 @@ pipeline {
         REMOTE_USER   = "user"
         REMOTE_HOST   = "remote.server.com"
         CONTAINER_NAME = "gl1-jee-module8"
-        APP_PORT      = "8080"
+        APP_PORT      = "8081"
     }
 
     stages {
