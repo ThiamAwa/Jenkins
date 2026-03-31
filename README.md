@@ -3,17 +3,19 @@
 <p align="center">
   <img src="https://img.shields.io/badge/work-completed-brightgreen.svg" alt="Work Status"/>
   <img src="https://img.shields.io/badge/Groupeisi-Java-green" alt="Groupe ISI"/>
-  <img src="https://img.shields.io/badge/Gestion--Etablissement-Spring Boot-yellowgreen" alt="Spring Boot"/>
+  <img src="https://img.shields.io/badge/Gestion--Etablissement-SpringBoot-yellowgreen" alt="Spring Boot"/>
   <img src="https://img.shields.io/badge/Java-17-blue" alt="Java 17"/>
   <img src="https://img.shields.io/badge/Maven-3.9.6-blueviolet" alt="Maven"/>
   <img src="https://img.shields.io/badge/Swagger-UI-orange" alt="Swagger"/>
   <img src="https://img.shields.io/badge/PostgreSQL-16-blue" alt="PostgreSQL"/>
-    <img src="https://img.shields.io/badge/CI%2FCD-Jenkins-D24939?logo=jenkins&logoColor=white" alt="Jenkins"/>
+  <img src="https://img.shields.io/badge/CI%2FCD-Jenkins-D24939?logo=jenkins&logoColor=white" alt="Jenkins"/>
   <img src="https://img.shields.io/badge/Image-Docker%20Hub-2496ED?logo=docker&logoColor=white" alt="Docker Hub"/>
   <img src="https://img.shields.io/badge/Versioning-GitHub-181717?logo=github&logoColor=white" alt="GitHub"/>
+  <img src="https://img.shields.io/badge/Deploy-SSH%20Remote-6C757D?logo=linux&logoColor=white" alt="SSH Deploy"/>
   <img src="https://img.shields.io/badge/Docker%20Image-thiamawa%2Fgl1--jee--module8-2496ED?logo=docker&logoColor=white" alt="Docker Image"/>
 </p>
 
+---
 
 > **Auteure :** Awa Thiam  
 > **Formation :** GL1 – JEE / DevOps  
@@ -21,54 +23,22 @@
 > **Docker Hub :** `thiamawa/gl1-jee-module8`  
 > **Port applicatif :** `8081`
 
+---
 
-## Description du projet
+##  Description du projet
 
-**Gestion Établissement** est une application web ** Spring Boot** permettant de gérer les entités d'un établissement scolaire (étudiants, inscrire, filières, Paiement, etc.).
-
+**Gestion Établissement** est une application web **Spring Boot** permettant de gérer les entités d'un établissement scolaire (étudiants, inscriptions, filières, paiements, etc.).
 Le projet intègre un pipeline CI/CD complet avec **Jenkins**, utilisant des agents Docker pour isoler chaque étape, et déploie automatiquement l'application sur un **serveur distant via SSH** après validation manuelle.
 
 
+##  Structure du projet
 
-## Structure du projet
-![img10](10.png)
+![10](10.png)
 
-### Vue générale du pipeline
-> *Ajoutez votre capture après le premier build réussi*
-
-![1](1.png)
-![2](2.png)
-![3](3.png)
-![4](4.png)
-![5](5.png)
-![6](6.png)
-![7](7.png)
-![8](8.png)
 
 ---
 
-### Pipeline Blue Ocean — Stages
-> *Vue graphique des 5 stages avec statuts*
-
-![Jenkins Blue Ocean](docs/screenshots/jenkins-blueocean.png)
-
----
-
-### Résultats des tests JUnit
-> *Rapport généré automatiquement par le stage Unit Test*
-
-![JUnit Tests](docs/screenshots/jenkins-tests.png)
-
----
-
-### Image publiée sur Docker Hub
-> *Tag versionné : `thiamawa/gl1-jee-module8:v<BUILD_NUMBER>`*
-
-![Docker Hub](docs/screenshots/dockerhub-image.png)
-
-
-
-##  Fichier `Jenkinsfile`
+## Fichier `Jenkinsfile`
 
 Le pipeline est **déclaratif**, sans agent global (`agent none`), chaque stage déclare son propre agent Docker pour une isolation maximale.
 
@@ -86,9 +56,9 @@ pipeline {
 
     stages {
 
-        // ─────────────────────────────────────────────────
-        // STAGE 1 — Tests unitaires (agent Maven Alpine)
-        // ─────────────────────────────────────────────────
+        // ============================================================
+        // STAGE 1 — Tests unitaires
+        // ============================================================
         stage('Unit Test') {
             agent {
                 docker {
@@ -106,10 +76,10 @@ pipeline {
             }
         }
 
-        // ─────────────────────────────────────────────────
-        // STAGE 2 — Build image Docker (multi-stage)
-        // Maven tourne dans le Dockerfile, pas ici
-        // ─────────────────────────────────────────────────
+        // ============================================================
+        // STAGE 2 — Build de l'image Docker (multi-stage Dockerfile)
+        // Maven est exécuté DANS le Dockerfile, pas ici
+        // ============================================================
         stage('Build Docker Image') {
             agent {
                 docker {
@@ -122,9 +92,9 @@ pipeline {
             }
         }
 
-        // ─────────────────────────────────────────────────
+        // ============================================================
         // STAGE 3 — Push vers Docker Hub
-        // ─────────────────────────────────────────────────
+        // ============================================================
         stage('Push to Docker Hub') {
             agent {
                 docker {
@@ -147,9 +117,9 @@ pipeline {
             }
         }
 
-        // ─────────────────────────────────────────────────
-        // STAGE 4 — Validation manuelle (gate humain)
-        // ─────────────────────────────────────────────────
+        // ============================================================
+        // STAGE 4 — Validation manuelle avant déploiement
+        // ============================================================
         stage('Approval') {
             agent none
             steps {
@@ -158,9 +128,9 @@ pipeline {
             }
         }
 
-        // ─────────────────────────────────────────────────
-        // STAGE 5 — Déploiement SSH sur serveur distant
-        // ─────────────────────────────────────────────────
+        // ============================================================
+        // STAGE 5 — Déploiement sur le serveur distant via SSH
+        // ============================================================
         stage('Deploy on Remote Server') {
             agent any
             steps {
@@ -181,35 +151,38 @@ pipeline {
         }
     }
 
+    // ============================================================
+    // POST — Notifications de fin de pipeline
+    // ============================================================
     post {
         success {
-            echo "✅ Pipeline réussi — Image déployée : ${IMAGE}:v${BUILD_NUMBER}"
+            echo "Pipeline réussi — Image déployée : ${IMAGE}:v${BUILD_NUMBER}"
         }
         failure {
-            echo '❌ Pipeline échoué — Vérifier les logs ci-dessus'
+            echo 'Pipeline échoué — Vérifier les logs ci-dessus'
         }
         always {
             echo 'Pipeline terminé.'
         }
     }
 }
+
+
 ```
 
----
-
-## 🚦 Description des 5 stages
+## Description des 5 stages
 
 | # | Stage | Agent Docker | Action principale | Particularité |
 |---|-------|-------------|-------------------|---------------|
-| 1 | **🧪 Unit Test** | `maven:3.9.11-eclipse-temurin-17-alpine` | `mvn test` + rapport JUnit | Cache `.m2` monté en volume |
-| 2 | **🐳 Build Docker Image** | `docker:25.0.3` | `docker build -t IMAGE:vN .` | Socket Docker partagé |
-| 3 | **📤 Push to Docker Hub** | `docker:25.0.3` | `docker push IMAGE:vN` | Credentials Jenkins `dockerhub_credentials` |
-| 4 | **✋ Approval** | `none` | Gate de validation manuelle | Bloque le pipeline jusqu'à approbation humaine |
-| 5 | **🚀 Deploy on Remote Server** | `any` | `ssh` → pull + stop + run | Credentials SSH `ssh-remote-server` |
+| 1 | **Unit Test** | `maven:3.9.11-eclipse-temurin-17-alpine` | `mvn test` + rapport JUnit | Cache `.m2` monté en volume |
+| 2 | **Build Docker Image** | `docker:25.0.3` | `docker build -t IMAGE:vN .` | Socket Docker partagé |
+| 3 | **Push to Docker Hub** | `docker:25.0.3` | `docker push IMAGE:vN` | Credentials Jenkins `dockerhub_credentials` |
+| 4 | **Approval** | `none` | Gate de validation manuelle | Bloque le pipeline jusqu'à approbation humaine |
+| 5 | ** Deploy on Remote Server** | `any` | `ssh` → pull + stop + run | Credentials SSH `ssh-remote-server` |
 
 ---
 
-## 🐳 Dockerfile multi-stage
+##  Dockerfile multi-stage
 
 Le Dockerfile suit un pattern **multi-stage** pour produire une image de production légère et sécurisée.
 
@@ -251,36 +224,16 @@ EXPOSE 8081
 ENTRYPOINT ["java", "-jar", "app.war"]
 ```
 
-### Avantages du multi-stage
 
-| Aspect | Bénéfice |
-|--------|----------|
-| **Taille** | L'image finale ne contient que le JRE + le WAR (sans Maven ni sources) |
-| **Sécurité** | Exécution en utilisateur non-root `appuser` |
-| **Cache** | `pom.xml` copié séparément pour réutiliser le cache des dépendances Maven |
-| **Propreté** | Aucun outil de build dans l'image de production |
 
----
 
-## 🔐 Credentials Jenkins requis
 
-Avant de lancer le pipeline, configurer les deux credentials suivants dans Jenkins :
-
-| ID Jenkins | Type | Usage |
-|------------|------|-------|
-| `dockerhub_credentials` | Username / Password | Login Docker Hub pour le push de l'image |
-| `ssh-remote-server` | SSH Username with private key | Connexion SSH au serveur de déploiement |
-
-> **Chemin Jenkins :** `Tableau de bord → Manage Jenkins → Credentials → Global → Add Credentials`
-
----
-
-## 🚀 Mise en route locale
+##  Mise en route locale
 
 ### Prérequis
 
 - Java 17+ installé
-- Maven 3.9+ installé
+- Maven 3.9,6 installé
 - PostgreSQL 16 installé et démarré
 - Docker installé
 - Jenkins LTS avec les plugins : `Docker Pipeline`, `SSH Agent`, `JUnit`, `Blue Ocean`
@@ -309,21 +262,68 @@ server.port=8081
 mvn spring-boot:run
 ```
 
-Application : `http://localhost:8081`  
-Swagger UI : `http://localhost:8081/swagger-ui/index.html`
+Application : `http://localhost:8081/inscrire`  
+
+
+---
 
 ### 4. Construire et lancer avec Docker
 
-```bash
-# Build
-docker build -t thiamawa/gl1-jee-module8:latest .
+**Étape 1 — Build Maven**
 
-# Run
-docker run -d \
-  --name gl1-jee-module8 \
-  -p 8081:8081 \
-  thiamawa/gl1-jee-module8:latest
+```bash
+mvn clean package -DskipTests
 ```
+
+![1](1.png)
+
+---
+
+**Étape 2 — Build de l'image Docker**
+
+```bash
+docker build -t thiamawa/gl1-jee-module8:local .
+```
+
+![2(2.png)
+
+---
+
+**Étape 3 — Création du réseau et lancement des conteneurs**
+
+``` bash
+
+docker network create test-network
+
+docker run -d --name postgres \
+  --network test-network \
+  -e POSTGRES_PASSWORD=passer \
+  -e POSTGRES_DB=gestionEtablissement \
+  postgres
+
+docker run -d --name gl1-jee-app \
+  --network test-network \
+  -p 8080:8080 \
+  thiamawa/gl1-jee-module8:local
+```
+---
+![3(3.png)
+![4(4.png)
+![5(5.png)
+
+
+**Étape 4 — Vérification des logs**
+
+```bash
+docker logs -f gl1-jee-app
+```
+
+![App Started](docs/screenshots/app-started.png)
+
+>  L'application est correctement démarrée si tu vois la ligne :
+![7(7.png)
+
+---
 
 ### 5. Lancer depuis Docker Hub
 
@@ -345,7 +345,7 @@ docker run -d --name gl1-jee-module8 -p 8081:8081 thiamawa/gl1-jee-module8:v<BUI
 
 ---
 
-## ✅ Bonnes pratiques appliquées
+##  Bonnes pratiques appliquées
 
 - `agent none` global → chaque stage déclare son propre agent Docker
 - Cache Maven `.m2` monté en volume pour accélérer les builds
@@ -361,8 +361,8 @@ docker run -d --name gl1-jee-module8 -p 8081:8081 thiamawa/gl1-jee-module8:v<BUI
 ## 👩‍💻 Auteure
 
 **Awa Thiam**  
-Étudiante en Génie Logiciel – GL1  
-Formation DevOps · JEE · Module 8  
+Étudiante en Génie Logiciel – M2GL  
+Formation DevOps · Sprint Boot · Module 8  
 Groupe ISI
 
 ---
@@ -370,4 +370,4 @@ Groupe ISI
 ## 📄 Licence
 
 Ce projet est réalisé dans un cadre pédagogique.  
-© 2024 – Awa Thiam · GL1 JEE DevOps · Groupe ISI
+© 2024 – Awa Thiam · M2GL Sprint DevOps · Groupe ISI
