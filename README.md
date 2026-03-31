@@ -33,57 +33,17 @@ Le projet intègre un pipeline CI/CD complet avec **Jenkins**, utilisant des age
 ## Structure du projet
 ![img10](10.png)
 
----
-
-## 🔄 Pipeline CI/CD — Vue d'ensemble
-
-```
- ┌───────────────┐
- │  Push GitHub  │
- └──────┬────────┘
-        │  webhook / polling
-        ▼
- ┌───────────────────────────────────────────────────────────────┐
- │                     JENKINS PIPELINE                          │
- │                                                               │
- │  ┌────────────┐   ┌─────────────────┐   ┌─────────────────┐  │
- │  │ 🧪 Unit    │──▶│ 🐳 Build Docker │──▶│ 📤 Push Docker  │  │
- │  │   Test     │   │    Image        │   │    Hub          │  │
- │  │ (maven:    │   │ (docker:25.0.3) │   │ (docker:25.0.3) │  │
- │  │  alpine)   │   │ Multi-stage     │   │ credentials     │  │
- │  └────────────┘   └─────────────────┘   └────────┬────────┘  │
- │                                                   │           │
- │                          ┌────────────────────────┘           │
- │                          ▼                                    │
- │                  ┌───────────────┐                            │
- │                  │ ✋ Approval   │  ← Validation manuelle     │
- │                  │  (input gate) │                            │
- │                  └───────┬───────┘                            │
- │                          │  approved                          │
- │                          ▼                                    │
- │                  ┌───────────────────┐                        │
- │                  │ 🚀 Deploy Remote  │                        │
- │                  │   SSH + Docker    │                        │
- │                  └───────────────────┘                        │
- │                                                               │
- │  post: ✅ success  |  ❌ failure  |  🔄 always               │
- └───────────────────────────────────────────────────────────────┘
-        │
-        ▼
- ┌─────────────────────────────────┐
- │  Serveur distant :8081          │
- │  container: gl1-jee-module8     │
- └─────────────────────────────────┘
-```
-
----
-
-## 🖼️ Captures d'écran Jenkins
-
 ### Vue générale du pipeline
 > *Ajoutez votre capture après le premier build réussi*
 
-![Jenkins Pipeline](docs/screenshots/jenkins-pipeline.png)
+![1](1.png)
+![2](2.png)
+![3](3.png)
+![4](4.png)
+![5](5.png)
+![6](6.png)
+![7](7.png)
+![8](8.png)
 
 ---
 
@@ -106,16 +66,9 @@ Le projet intègre un pipeline CI/CD complet avec **Jenkins**, utilisant des age
 
 ![Docker Hub](docs/screenshots/dockerhub-image.png)
 
----
 
-### Déploiement SSH — Serveur distant
-> *Logs du déploiement sur le serveur remote via SSH*
 
-![Deploy Remote](docs/screenshots/deploy-remote.png)
-
----
-
-## ⚙️ Fichier `Jenkinsfile`
+##  Fichier `Jenkinsfile`
 
 Le pipeline est **déclaratif**, sans agent global (`agent none`), chaque stage déclare son propre agent Docker pour une isolation maximale.
 
