@@ -33,7 +33,7 @@ pipeline {
 
         // ============================================================
         // STAGE 2 — Build de l'image Docker (multi-stage Dockerfile)
-        // Maven est exécuté DANS le Dockerfile, pas ici
+        // Maven est exécuté DANS le Dockerfile
         // ============================================================
         stage('Build Docker Image') {
             agent {
