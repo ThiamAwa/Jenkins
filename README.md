@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/work-completed-brightgreen.svg" alt="Work Status"/>
   <img src="https://img.shields.io/badge/Groupeisi-Java-green" alt="Groupe ISI"/>
-  <img src="https://img.shields.io/badge/Gestion--Etablissement-Spring-yellowgreen" alt="Spring Boot"/>
+  <img src="https://img.shields.io/badge/Gestion--Etablissement-Spring Boot-yellowgreen" alt="Spring Boot"/>
   <img src="https://img.shields.io/badge/Java-17-blue" alt="Java 17"/>
   <img src="https://img.shields.io/badge/Maven-3.9.6-blueviolet" alt="Maven"/>
   <img src="https://img.shields.io/badge/Swagger-UI-orange" alt="Swagger"/>
