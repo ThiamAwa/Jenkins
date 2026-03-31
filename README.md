@@ -56,9 +56,9 @@ pipeline {
 
     stages {
 
-        // ============================================================
+     
         // STAGE 1 — Tests unitaires
-        // ============================================================
+       
         stage('Unit Test') {
             agent {
                 docker {
@@ -76,10 +76,10 @@ pipeline {
             }
         }
 
-        // ============================================================
+        
         // STAGE 2 — Build de l'image Docker (multi-stage Dockerfile)
-        // Maven est exécuté DANS le Dockerfile, pas ici
-        // ============================================================
+        // Maven est exécuté DANS le Dockerfile
+        
         stage('Build Docker Image') {
             agent {
                 docker {
@@ -92,9 +92,9 @@ pipeline {
             }
         }
 
-        // ============================================================
+       
         // STAGE 3 — Push vers Docker Hub
-        // ============================================================
+     
         stage('Push to Docker Hub') {
             agent {
                 docker {
@@ -117,9 +117,9 @@ pipeline {
             }
         }
 
-        // ============================================================
+        
         // STAGE 4 — Validation manuelle avant déploiement
-        // ============================================================
+     
         stage('Approval') {
             agent none
             steps {
@@ -128,9 +128,9 @@ pipeline {
             }
         }
 
-        // ============================================================
+      
         // STAGE 5 — Déploiement sur le serveur distant via SSH
-        // ============================================================
+      
         stage('Deploy on Remote Server') {
             agent any
             steps {
@@ -151,9 +151,8 @@ pipeline {
         }
     }
 
-    // ============================================================
     // POST — Notifications de fin de pipeline
-    // ============================================================
+   
     post {
         success {
             echo "Pipeline réussi — Image déployée : ${IMAGE}:v${BUILD_NUMBER}"
