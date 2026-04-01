@@ -250,7 +250,7 @@ cd gestionEtablissement
 # src/main/resources/application.properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/gestion_etablissement_db
 spring.datasource.username=postgres
-spring.datasource.password=votre_mot_de_passe
+spring.datasource.password=""
 spring.jpa.hibernate.ddl-auto=update
 server.port=8081
 ```
@@ -324,16 +324,7 @@ docker logs -f gl1-jee-app
 
 ---
 
-### 5. Lancer depuis Docker Hub
-
-```bash
-docker pull thiamawa/gl1-jee-module8:v<BUILD_NUMBER>
-docker run -d --name gl1-jee-module8 -p 8081:8081 thiamawa/gl1-jee-module8:v<BUILD_NUMBER>
-```
-
----
-
-## 🔧 Configuration Jenkins — Pas à pas
+##  Configuration Jenkins — Pas à pas
 
 1. **Nouveau Item** → choisir **Pipeline** → nommer `GestionEtablissement`
 2. **Pipeline** → `Pipeline script from SCM`
@@ -357,7 +348,7 @@ docker run -d --name gl1-jee-module8 -p 8081:8081 thiamawa/gl1-jee-module8:v<BUI
 
 ---
 
-## 👩‍💻 Auteure
+##  Auteure
 
 **Awa Thiam**  
 Étudiante en Génie Logiciel – M2GL  
